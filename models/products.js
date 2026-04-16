@@ -1,28 +1,36 @@
-const  pool  = require("../utils/database")
+const pool = require("../utils/database")
 
-module.exports = class Products {
-    constructor(productname, price, image) {
+module.exports = class Products{
+    constructor(id,productname,price,image){
+        this.id = id;
         this.productname = productname;
         this.price = price;
         this.image = image;
     }
-    
-    static fetchProducts() {
-        return pool.execute('SELECT * FROM products');
+
+    static fetchProducts(){
+        return pool.execute("select * from products");
     }
 
-    static fetchProductById(id) {
-        return pool.execute('SELECT * FROM products WHERE id = ?', [id]);
+    static fetchProductById(id){
+        return pool.execute("select * from products where id=?", [id]);
     }
 
-    static deleteProductById(id) {
-        return pool.execute('DELETE FROM products WHERE id = ?', [id]);
-    }
-    postData() {
-        return pool.execute('INSERT INTO products (productname, price, img) VALUES (?, ?, ?)', [this.productname, this.price, this.image]);
+    static deleteProductById(id){
+        return pool.execute("delete from products where id=?", [id]);
     }
 
-    editData(id) {
-        return pool.execute('UPDATE products SET productname = ?, price = ?, img = ? WHERE id = ?', [this.productname, this.price, this.image, id]);
+    postData(){
+        return pool.execute(
+            "insert into products(productname,price,img) values(?,?,?)",
+            [this.productname, this.price, this.image]
+        );
+    }
+
+    editData(){
+        return pool.execute(
+            "update products set productname=?, price=?, img=? where id=?",
+            [this.productname, this.price, this.image, this.id]
+        );
     }
 }

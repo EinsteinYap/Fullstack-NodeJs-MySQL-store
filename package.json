@@ -1,5 +1,5 @@
 {
-  "name": "fullstack-nodejs-mysql-store",
+  "name": "mystore",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,9 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^2.2.2",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
     "ejs": "^5.0.2",
-    "express": "^5.2.1",
-    "mysql2": "^3.22.0"
+    "express": "^4.18.2",
+    "express-mysql-session": "^3.0.0",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.6.3"
   }
 }

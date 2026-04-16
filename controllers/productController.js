@@ -1,61 +1,65 @@
-const Products = require('../models/products');
+const Products = require("../models/products");
 
-const products = [];
-    
+exports.renderProducts = (req,res)=>{
 
-
-
-exports.renderProducts = (req, res) => {
     Products.fetchProducts()
-    .then(([rows,fieldData])=>{
-        
-        res.render('home',{products:rows});
-    })
-    .catch(err=>console.log(err));
-};
+        .then(([rows,fieldData])=>{
+            res.render(
+                "home", 
+                {
+                    products : rows,
+                    isLoggedIn : global.isLoggedIn
+                }
+            );
+        })
+}
 
+exports.renderAddProduct = (req,res)=>{
+    res.render("add-product", {isLoggedIn : global.isLoggedIn});
+}
 
-exports.renderAddProducts = (req, res) => {
-    res.render('add-product');
-};
+exports.postAddProduct = (req,res)=>{
+    const {productname,price} = req.body;
+    const image = req.file.destination+"/"+req.file.filename;
 
-exports.postAddProducts = (req, res) => {
-   const { productname, price, image } = req.body;
-   const products = new Products(productname, price, image);
+    const products = new Products(null,productname,price,image);
+
+    console.log(image);
+
     products.postData().then(()=>{
         res.redirect('/');
-        console.log(productname +' added successfully');
-    }).catch(err=>console.log(err));
-
-};
-
-
-exports.renderEditProducts = (req, res) => {
-    Products.fetchProductById(req.params.id)
-    .then(([[productData],fieldData])=>{
-        console.log(productData);
-        res.render('edit-product',{product:productData});
     })
-    .catch(err=>console.log(err));  
+}
+
+exports.renderEditProduct = (req,res)=>{
     
-};
+    Products.fetchProductById(req.params.id)
+        .then(([ [productData], fieldData])=>{
+            res.render(
+                "edit-product",
+                {
+                    product : productData,
+                    isLoggedIn : global.isLoggedIn
+                }
+            )
+        })
+}
 
-exports.editProduct = (req, res) => {
-    const { productname, price, image } = req.body;
+exports.editProduct = (req,res)=>{
+    const {productname,price} = req.body;
+    const image = req.file.destination+"/"+req.file.filename;
     const id = req.params.id;
-    const products = new Products(productname, price, image);
-        products.editData(id).then(()=>{
-            res.redirect('/');
-            console.log(productname +' updated successfully');
-        }).catch(err=>console.log(err));
-};
 
-exports.deleteProduct = (req, res) => {
-    const id = req.params.id;
-    Products.deleteProductById(id)
-    .then(()=>{
+    const products = new Products(id,productname,price,image);
+
+    products.editData().then(()=>{
         res.redirect('/');
-        console.log('Product deleted successfully');
     })
-    .catch(err=>console.log(err));
-};
+}
+
+exports.deleteProduct = (req,res)=>{
+    Products.deleteProductById(req.params.id)
+        .then(()=>{
+            res.redirect('/');
+        })
+}

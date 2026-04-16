@@ -1,11 +1,13 @@
 const bodyParser = require('body-parser');
 const express = require('express');
-const { renderAddProducts,postAddProducts } = require('../controllers/productController');
+const { renderAddProduct, postAddProduct } = require('../controllers/productController');
+const { auth } = require('../middlewares/auth');
 const router = express.Router();
 
 router.use(bodyParser.urlencoded());
 
-router.get('/',renderAddProducts);
-router.post('/',postAddProducts);
+router.get('/', auth,renderAddProduct);
+
+router.post('/', auth,postAddProduct);
 
 module.exports = router;
